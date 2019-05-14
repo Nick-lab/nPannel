@@ -2,10 +2,17 @@
 <html>
     <head>
         {{!-- Global Resources --}}
+        {{#each styles}}
+            <link rel="stylesheet" href="{{src}}">
+        {{/each}}
         {{!-- Page Resources --}}
+        {{#each scripts}}
+            <script src="{{src}}" {{#if defer}}async defer{{/if}}></script>
+        {{/each}}
         {{!-- Meta --}}
     </head>
     <body>
+        {{> header}}
         {{{body}}}
     </body>
 </html>
