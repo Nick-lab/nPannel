@@ -26,6 +26,8 @@ function Resolve(client, urlArr){
     })
 }
 
+
+// this is all garbage and need to be cleaned up but it works for now
 function GetDirectory(client){
     return new Promise((res)=>{
         var directory = {

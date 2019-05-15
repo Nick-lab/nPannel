@@ -1,3 +1,9 @@
+function require(){
+    throw "require function disabled, use passed opjects to manage users, tables and data";
+}
 module.exports = () => {
-    return 'script works';
+    /* user-script */
+    return "script works";
+
+    /* user-script */
 }
