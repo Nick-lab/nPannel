@@ -14,18 +14,22 @@ function IsResource(urlArr){
 }
 
 function Get(res, dir, urlArr){
+    Send(res, path.join(dir, 'resources', urlArr.join('/')) );
+}
+
+function Send(res, resourcePath){
     // determin if file exsist
-    fs.access(path.join(dir, 'resources', urlArr.join('/')), fs.F_OK, (err)=>{
+    fs.access(resourcePath, fs.F_OK, (err)=>{
         if(err){
             // resolve the request with a 404
-            console.log(path.join(dir, 'resources', urlArr.join('/')));
             res.status(404).send('Not found');
         }else{
             // stream file to user
-            fs.createReadStream(path.join(dir, 'resources', urlArr.join('/'))).pipe(res);
+            fs.createReadStream(resourcePath).pipe(res);
         }
     })
 }
 
 module.exports.get = Get;
+module.exports.send = Send;
 module.exports.isResource = IsResource;

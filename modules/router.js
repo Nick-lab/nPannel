@@ -13,7 +13,7 @@ function Resolve(client, urlArr){
                 scripts: []
             }
             
-
+            
             directory.pages.forEach((page)=>{
                 if(page.paths.indexOf(urlArr.join('/')) > -1){
                     tmp.styles = directory.global.styles.concat(page.styles)

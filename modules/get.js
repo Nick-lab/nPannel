@@ -34,50 +34,58 @@ function Process(req, res, app){
         
         if(client){
             //console.log(client);
-
             // clients folder directory use global from here out
             var clientDir = global.paths.clientDir = path.join(global.paths.clients, String(client.id));
 
             // check id url is trying to load a resource file or a page
             if(resource.isResource(urlArr)){
-                
-                // pass resolve / clients directory / and url Array and sends back file requested or a 404 if it doesn't exsist
-                resource.get(res, clientDir, urlArr);
+                // console.log(urlArr);
+                // pass resolve / clients directory and url Array and sends back file requested or a 404 if it doesn't exsist
+                if(urlArr[0] === "admin"){
+                    console.log(path.join('ionic_directory', 'www', urlArr.slice(1).join('/')));
+                    resource.send(res, path.join(global.paths.root, 'www', urlArr.slice(1).join('/')));
+                }else{
+                    resource.get(res, clientDir, urlArr);
+                }
             }else{
+                if(urlArr[0] === "admin"){
+                    resource.send(res, path.join(global.paths.root, 'www/index.html'));
+                }else{
+                    // setup handlebars to use clients directory for loading layouts / teemplates / and partials
+                    app.set('views', path.join(clientDir, 'views'));
+                    app.engine('hbs', hbs({
+                        extname: 'hbs',
+                        layoutsDir: path.join(clientDir, 'views/layouts'),
+                        partialsDir: path.join(clientDir, 'views/partials'),
+                        defaultLayout: 'default'
+                    }));
+                    app.set('view engine', 'hbs');
 
-                // setup handlebars to use clients directory for loading layouts / teemplates / and partials
-                app.set('views', path.join(clientDir, 'views'));
-                app.engine('hbs', hbs({
-                    extname: 'hbs',
-                    layoutsDir: path.join(clientDir, 'views/layouts'),
-                    partialsDir: path.join(clientDir, 'views/partials'),
-                    defaultLayout: 'default'
-                }));
-                app.set('view engine', 'hbs');
+                    // router determins what pages to load based on database pages not files
+                    router.resolve(client, urlArr).then((route)=>{
+                        // route object to hold all data that comes from user scripts and should be rendered with template
 
-                // router determins what pages to load based on database pages not files
-                router.resolve(client, urlArr).then((route)=>{
-                    // route object to hold all data that comes from user scripts and should be rendered with template
-
-                    // get path to user script
-                    let pageScript = path.join(clientDir, 'page_scripts', route.page.page_id + '.js');
-                    
-                    // scripts loads and runs server scripts for user exposed_modules will be modules specifically designed to allow user to interact with server safely
-                    // also want to setup a user script to run regaudless of what page is loaded
-                    scripts.run(pageScript).then((data)=>{
-                        console.log(data);
-                        console.log(route);
-                        if(data.error){
-                            // must send errors to client if they appear otherwise they cannot debug code
-                            res.send(data.error);
-                        }else{
-                            // all done 
-                            res.render(route.page.page_id, route);
-                        }
+                        // get path to user script
+                        let pageScript = path.join(clientDir, 'page_scripts', route.page.page_id + '.js');
                         
+                        // scripts loads and runs server scripts for user exposed_modules will be modules specifically designed to allow user to interact with server safely
+                        // also want to setup a user script to run regardless of what page is loaded like a site wide script
+                        scripts.run(pageScript).then((data)=>{
+                            console.log(data);
+                            console.log(route);
+                            if(data.error){
+                                // must send errors to client if they appear otherwise they cannot debug code
+                                res.send(data.error);
+                            }else{
+                                // all done 
+                                res.render(route.page.page_id, route);
+                            }
+                            
+                        });
                     });
-                });
+                }
             }
+            
         }else{
             // no client setup
         }
