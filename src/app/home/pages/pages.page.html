@@ -1,0 +1,75 @@
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{ parent ? parent.title : 'Root' }}</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card card-primary card-outline">
+        <div class="card-header" style="padding-bottom: 0;">
+            <ul class="nav nav-tabs" style="border-bottom: 0;">
+                <li class="nav-item">
+                    <a [class.active]="tab == 'pages'" (click)="tab = 'pages'" class="nav-link">Sub Pages</a>
+                </li>
+                <li class="nav-item" *ngIf="parentId">
+                    <a [class.active]="tab == 'code'" (click)="tab = 'code'" class="nav-link">Code</a>
+                </li>
+                <li class="nav-item" *ngIf="parentId">
+                    <a [class.active]="tab == 'settings'" (click)="tab = 'settings'" class="nav-link">Settings</a>
+                </li>
+            </ul>
+        </div>
+        
+        <div *ngIf="tab == 'pages'" class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul *ngIf="pages" class="list-group">
+        
+                        <div *ngFor="let page of pages">
+                            <li class="list-group-item"><a [routerLink]="'/admin/pages/' + page.id">{{ page.title }}</a></li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="tab == 'code'" class="card-body" style="    padding: 5px 15px;">
+            <div class="editor" style="margin: 0px 5px;">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a [class.active]="codeTab == 'template'" (click)="openCode('template')" class="nav-link">Template</a>
+                    </li>
+                    <li class="nav-item" *ngIf="parentId">
+                        <a [class.active]="codeTab == 'script'" (click)="openCode('script')" class="nav-link">Script</a>
+                    </li>
+                    <li class="nav-item" *ngIf="parentId">
+                        <a [class.active]="codeTab == 'style'" (click)="openCode('style')" class="nav-link">Style</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card" style="min-height: 600px;">
+                <div class="card-body" style="position: relative; padding: 0;">
+                    <ace [config]="config" [(value)]="code[codeTab]"></ace>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="tab == 'settings'" class="card-body">
+            
+        </div>
+
+        <div *ngIf="tab == 'pages'" class="card-footer">
+            <button class="btn btn-primary btn-sm" (click)="onNewPage();"><i class="fa fa-plus"></i> Add Page</button>
+        </div>
+
+        <div *ngIf="tab == 'code'" class="card-footer">
+            <button class="btn btn-primary btn-sm" (click)="onSaveCode()">Save</button>
+        </div>
+
+
+    </div>  
+</section>

@@ -1,0 +1,33 @@
+<div class="content">
+    <div class="modal-header">
+        <h4 class="modal-title">New Page {{ (parent ? parent : 'Root') }}</h4>
+        <button aria-label="Close" class="close" type="button" (click)="onClose()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    
+    <div class="modal-body">
+        <div class="row">
+            <div class="col">
+                <input class="form-control" type="text" placeholder="title" [(ngModel)]="title" (change)="onUpdateRoute()">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input class="form-control" type="text" placeholder="route" [(ngModel)]="route">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <select class="form-control" name="type" [(ngModel)]="type">
+                    <option value="default">Default</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-footer">
+            <button _ngcontent-jwm-c4="" class="btn btn-outline-success" type="button" (click)="onSave()">Save</button>
+    </div>
+</div>
+    

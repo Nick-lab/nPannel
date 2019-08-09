@@ -1,23 +1,49 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { APP_BASE_HREF, CommonModule } from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import {MatDialogModule} from '@angular/material/dialog';
+import { AceModule } from 'ngx-ace-wrapper';
+import { ACE_CONFIG } from 'ngx-ace-wrapper';
+import { AceConfigInterface } from 'ngx-ace-wrapper';
 
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AccessGuard } from './access-gaurd.service';
+import { DataManagerService } from './data.service';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+
+import { CreatePageComponent } from './home/pages/create-page/create-page.page';
+
+const DEFAULT_ACE_CONFIG: AceConfigInterface = { };
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  declarations: [
+    AppComponent,
+    CreatePageComponent
+  ],
+  entryComponents: [
+    CreatePageComponent
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    CommonModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    MatDialogModule,
+    AceModule
+  ],
   providers: [
-    StatusBar,
-    SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    AccessGuard,
+    DataManagerService,
+    { provide: ACE_CONFIG, useValue: DEFAULT_ACE_CONFIG },
+    { provide: APP_BASE_HREF, useValue: '/' }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
