@@ -4,6 +4,7 @@ const router = require('./router');
 const scripts = require('./scripts');
 const path = require('path');
 var hbs = require( 'express-handlebars');
+var db = require('./database');
 
 const mime = {
     'js': 'application/javascript',
@@ -17,7 +18,7 @@ function Process(req, res, app){
     var domain = req.get('host').split(':')[0];
 
     // split url into array eg: domain.com/account/settings -> ["account", "settings"] 
-    var urlArr = req.originalUrl.split('?')[0].replace(/^(\/)/, '').split('/');
+    var urlArr = req.originalUrl.split('?')[0].replace(/^\/+|\/+$/g, '').split('/');
     // parse get peramiters
     var GET = false;
     if(req.originalUrl.split('?').length > 1){
@@ -27,6 +28,7 @@ function Process(req, res, app){
             GET[splitKey[0]] = !isNaN(splitKey[1]) ? Number(splitKey[1]) : decodeURI(splitKey[1]);
         });
     }
+    console.log(urlArr);
 
     // http or https
     var protocol = req.protocol;
@@ -85,7 +87,7 @@ function Process(req, res, app){
                     router.resolve(client, urlArr).then((route)=>{
                         if(route) {
                             // route object to hold all data that comes from user scripts and should be rendered with template
-
+                            console.log(req.connection.remoteAddress, req.sessionID);
                             // get path to user script
                             let pageScript = path.join(clientDir, 'page_scripts', route.page.id + '.js');
                             

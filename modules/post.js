@@ -101,20 +101,15 @@ function Process(req, res){
                     Object.keys(files).forEach((key) => {
                         if(fields[key + '-path']){
                             let filePath = path.join(clientDir, fields[key + '-path']);
-                            console.log(filePath);
-                            console.log(files[key]);
                             let dest = fs.createWriteStream(filePath);
                             fs.createReadStream(files[key].path).pipe(dest);
                         }
                     })
                     res.send({ok: true});
                 });
-                
             }
-
         }
     });
-
 }
 
 

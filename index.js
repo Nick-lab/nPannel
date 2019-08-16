@@ -2,9 +2,14 @@ const path = require('path');
 const Cors = require('cors');
 const bodyParser = require('body-parser');
 const app = require('express')();
-const https = require('https');
 const session = require('express-session');
-const frameguard = require('frameguard')
+const frameguard = require('frameguard');
+const fs = require('fs');
+
+const http = require('http').createServer(app);
+const https = require('https');
+
+const io = require('socket.io').listen(http);
 
 const port = 3000; 
 
@@ -35,6 +40,7 @@ global.devDomains = [
 const get = require(path.join(global.paths.modules, 'get'));
 const post = require(path.join(global.paths.modules, 'post'));
 const client = require(path.join(global.paths.modules, 'client'));
+const socket_module = require(path.join(global.paths.modules, 'socket'));
 
 // setup session managment
 app.set('trust proxy', 1) // trust first proxy
@@ -55,8 +61,25 @@ app.use(Cors());
 // get and post processors
 app.get('*', (req,res)=>{get.process(req,res,app)});
 app.post('*', post.process);
+io.on('connection', (socket)=>{ socket_module.process(socket, io); });
 
 // run server and listen on defined port
-app.listen(port, ()=>{
+http.listen(port, ()=>{
     console.log('Listening on port: '+port);
 })
+
+// try {
+//   var key = fs.readFileSync('server.key');
+//   var cert = fs.readFileSync('server.cert');
+// } catch (e) {
+//   key = false;
+//   cert = false;
+// }
+
+// https.createServer({
+//   key: key,
+//   cert: cert
+// }, app)
+// .listen(port, function () {
+//   console.log('Listening on port: '+port);
+// })

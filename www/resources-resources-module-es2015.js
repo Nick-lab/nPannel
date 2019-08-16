@@ -76,11 +76,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourcesComponent", function() { return ResourcesComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var src_app_data_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/data.service */ "./src/app/data.service.ts");
+
 
 
 let ResourcesComponent = class ResourcesComponent {
-    constructor() { }
+    constructor(dataMngr) {
+        this.dataMngr = dataMngr;
+    }
 };
+ResourcesComponent.ctorParameters = () => [
+    { type: src_app_data_service__WEBPACK_IMPORTED_MODULE_2__["DataManagerService"] }
+];
 ResourcesComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         template: __webpack_require__(/*! raw-loader!./resources.page.html */ "./node_modules/raw-loader/index.js!./src/app/home/resources/resources.page.html"),
