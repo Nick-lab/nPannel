@@ -1,0 +1,14 @@
+name: npanel
+
+services:
+  database:
+    type: mysql
+    portforward: 3306
+    creds: 
+      user: mysql
+      password: mysql
+      database: npanel
+tooling:
+  mysql:
+    user: root
+    service: database

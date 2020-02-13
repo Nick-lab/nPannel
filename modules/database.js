@@ -49,11 +49,21 @@ function Insert(table, data) {
 function Connect(){
     return new Promise((res)=>{
         if(connected) res();
-        else con.connect((err)=>{
-            if(err) res(err);
-            connected = true;
-            res();
-        })
+        else {
+            try {
+                con.connect((err)=>{
+                    if(err) {
+                        console.log(err);
+                        res(err);
+                    } else {
+                        connected = true;
+                        res();
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+            }
+        }
     })
 }
 

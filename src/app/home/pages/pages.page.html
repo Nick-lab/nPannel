@@ -12,13 +12,16 @@
     <div class="card card-primary card-outline">
         <div class="card-header" style="padding-bottom: 0;">
             <ul class="nav nav-tabs" style="border-bottom: 0;">
-                <li class="nav-item">
+                <li class="nav-item" *ngIf="canSubPage">
                     <a [class.active]="tab == 'pages'" (click)="tab = 'pages'" class="nav-link">Sub Pages</a>
+                </li>
+                <li class="nav-item" *ngIf="!parentId">
+                    <a [class.active]="tab == 'partials'" (click)="tab = 'partials'" class="nav-link">Partials</a>
                 </li>
                 <li class="nav-item" *ngIf="parentId">
                     <a [class.active]="tab == 'code'" (click)="tab = 'code'" class="nav-link">Code</a>
                 </li>
-                <li class="nav-item" *ngIf="parentId">
+                <li class="nav-item">
                     <a [class.active]="tab == 'settings'" (click)="tab = 'settings'" class="nav-link">Settings</a>
                 </li>
             </ul>
@@ -28,16 +31,32 @@
             <div class="row">
                 <div class="col-sm-12">
                     <ul *ngIf="pages" class="list-group">
-        
-                        <div *ngFor="let page of pages">
-                            <li class="list-group-item"><a [routerLink]="'/admin/pages/' + page.id">{{ page.title }}</a></li>
-                        </div>
+                        <li *ngFor="let page of pages" class="list-group-item list-items">
+                            <a [routerLink]="'/admin/pages/' + page.id">{{ page.title }}</a>
+                            <a (click)="deletePartial(partial)" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="tab == 'code'" class="card-body" style="    padding: 5px 15px;">
+        <div *ngIf="tab == 'partials'" class="card-body" style="padding: 5px 15px;">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul *ngIf="pages" class="list-group">
+                        <li *ngFor="let partial of partials" class="list-group-item list-items">
+                            <a (click)="openPartial(partial)">{{ partial }}</a>
+                            <a (click)="deletePartial(partial)" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-8" style="min-height: 600px;">
+                    <ace [config]="config" [(value)]="code[codeTab]" style="position: relative"></ace>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="tab == 'code'" class="card-body" style="padding: 5px 15px;">
             <div class="editor" style="margin: 0px 5px;">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
@@ -58,7 +77,11 @@
             </div>
         </div>
 
-        <div *ngIf="tab == 'settings'" class="card-body">
+        <div *ngIf="tab == 'settings' && parentId" class="card-body">
+            
+        </div>
+        <!-- Site  -->
+        <div *ngIf="tab == 'settings' && !parentId" class="card-body">
             
         </div>
 
@@ -66,8 +89,13 @@
             <button class="btn btn-primary btn-sm" (click)="onNewPage();"><i class="fa fa-plus"></i> Add Page</button>
         </div>
 
+        <div *ngIf="tab == 'partials'" class="card-footer">
+            <button class="btn btn-primary btn-sm" (document:keydown.meta.s)="onSavePartial($event)" (click)="onSavePartial()">Save</button>
+            <button class="btn btn-primary btn-sm" (click)="onNewPartial()">New Partial</button>
+        </div>
+
         <div *ngIf="tab == 'code'" class="card-footer">
-            <button class="btn btn-primary btn-sm" (click)="onSaveCode()">Save</button>
+            <button class="btn btn-primary btn-sm" (document:keydown.meta.s)="onSaveCode($event)" (click)="onSaveCode()">Save</button>
         </div>
 
 

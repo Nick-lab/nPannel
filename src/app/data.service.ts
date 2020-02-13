@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class DataManagerService {
@@ -19,6 +20,7 @@ export class DataManagerService {
 
     constructor(
         private http: HttpClient,
+        private router: Router
     ) {
         if (this.prod) {
             Object.keys(this.prodPoints).forEach((key) => {
@@ -33,6 +35,10 @@ export class DataManagerService {
 
     private localSave(key: string, data: any) {
         localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    private localDelete(key: string) {
+        localStorage.removeItem(key);
     }
 
     private Localload(key: string) {
@@ -57,7 +63,6 @@ export class DataManagerService {
             'Accept': 'application/json',
             'Access-Control-Allow-Origin': 'http://localhost:3000/'
         });
-        console.log(data);
         return new Promise((resolve, reject) => {
             this.http.post( '/' + command, JSON.stringify(data), { headers }).toPromise().then((response: any) => {
                 // clearTimeout(timeout);
@@ -72,7 +77,7 @@ export class DataManagerService {
         });
     }
 
-    async filePost(command: string, data: FormData) {
+    public async filePost(command: string, data: FormData) {
         return new Promise((res, rej) => {
             // data.append('command', command);
             this.http.post('/' + command, data, {
@@ -113,6 +118,21 @@ export class DataManagerService {
     }
 
     public loadUser() {
-        this.user = this.Localload('user-data');
+        return new Promise((res) => {
+            this.post('check-signin', {}).then((user) => {
+                if(user){
+                    this.user = user;
+                } else {
+                    this.user = null;
+                    this.localDelete('user-data');
+                }
+                res(user);
+            });
+        })
+    }
+
+    public logOut() {
+        this.user = null;
+        this.localDelete('user-data');
     }
 }

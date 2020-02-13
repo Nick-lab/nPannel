@@ -36,7 +36,12 @@ function Process(req, res, app){
     // load clinet details
     client.load(domain).then((client)=>{
         // if client parse client and url to supply files
-        
+        // catch client / db errors
+        if(client.error) {
+            res.send(client.error)
+        }
+
+
         if(client){
             //console.log(client);
             // clients folder directory use global from here out
@@ -60,12 +65,14 @@ function Process(req, res, app){
                     }
                     resource.send(res, path.join(global.paths.root, 'www', urlArr.slice(1).join('/')), options);
                 }else{
+                    
                     resource.get(res, clientDir, urlArr);
                 }
             }else{ 
                 if(urlArr[0] === "admin"){
                     // force admin to load for anything domain.com/ADMIN/any/thing
                     resource.send(res, path.join(global.paths.root, 'www/index.html'));
+                    
                 }else if (urlArr[0].match(/^[_]+[a-z]+/gm)) {
                     try {
                         require('./' + urlArr[0]).proccess(res, client, urlArr);
@@ -78,13 +85,14 @@ function Process(req, res, app){
                     app.engine('hbs', hbs({
                         extname: 'hbs',
                         layoutsDir: path.join(clientDir, 'views/layouts'),
-                        partialsDir: path.join(clientDir, 'views/partials'),
+                        partialsDir: [path.join(global.paths.root, 'defaults/partials'), path.join(clientDir, 'views/partials')],
                         defaultLayout: 'default'
                     }));
                     app.set('view engine', 'hbs');
 
                     // router determins what pages to load based on database pages not files
                     router.resolve(client, urlArr).then((route)=>{
+                        
                         if(route) {
                             // route object to hold all data that comes from user scripts and should be rendered with template
                             console.log(req.connection.remoteAddress, req.sessionID);
@@ -93,20 +101,31 @@ function Process(req, res, app){
                             
                             // scripts loads and runs server scripts for user exposed_modules will be modules specifically designed to allow user to interact with server safely
                             // also want to setup a user script to run regardless of what page is loaded like a site wide script
-                            scripts.run(pageScript).then((data)=>{
-                                
+                            scripts.run({
+                                pageScript, 
+                                client, 
+                                GET,
+                                req,
+                                urlArr
+                            }).then((data)=>{
+                                console.log(data);
                                 if(data && data.error){
                                     // must send errors to client if they appear otherwise they cannot debug code
                                     res.status(500).send(data.error);
                                 }else{
                                     // all done 
-                                    route.data = data;
+                                    route.data = data || {};
                                     route.debug = JSON.stringify(route);
-                                    res.render(route.page.id, route);
+                                    try {
+                                        res.render(route.page.id, route);
+                                    } catch (e) {
+                                        res.status(500).send(e);
+                                    }
                                 }
                                 
                             });
                         } else {
+                            
                             res.send('Router Cannot Resolve Path: ' + urlArr);
                         }
                     });

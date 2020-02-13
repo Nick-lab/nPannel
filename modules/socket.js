@@ -23,7 +23,7 @@ function Process(socket, io) {
                     fs.writeFileSync(socket_path, `module.exports = (socket, io) => { // code . . . }`);
                 }
                 try {
-                    require(socket_path)(socket, nsp);
+                    require(socket_path)(socket, io);
                 } catch (error) {
                     socket.emit('err', error.message + '; in file socket.js');
                 }

@@ -15,17 +15,17 @@ const port = 3000;
 
 // setup global object
 global.paths = {
-    root: __dirname,
-    modules: path.join(__dirname, 'modules'),
-    clients: path.join(__dirname, 'clients')
+  root: __dirname,
+  modules: path.join(__dirname, 'modules'),
+  clients: path.join(__dirname, 'clients')
 }
 
 // base connection for data base
 global.database = {
   host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'npannel'
+  user: 'mysql',
+  password: 'mysql',
+  database: 'npanel'
 }
 
 // domain to determin dev environment
@@ -45,12 +45,19 @@ const socket_module = require(path.join(global.paths.modules, 'socket'));
 // setup session managment
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
+  secret: 'some secret change later',
+  resave: true,
   saveUninitialized: true,
-  cookie: { secure: true }
-}))
-
+  cookie: { 
+    expires: 20000,
+    secure: false,
+    sameSite: false
+  }
+}));
+app.use((req, res, next) => {
+  console.log('req.session', req.session)
+  next()
+})
 app.use(frameguard())
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))

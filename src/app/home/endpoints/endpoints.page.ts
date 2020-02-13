@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 @Component({
-    templateUrl: 'tables.page.html',
-    styleUrls: ['tables.page.scss'],
-    selector: 'app-tables'
+    templateUrl: 'endpoints.page.html',
+    styleUrls: ['endpoints.page.scss'],
+    selector: 'app-endpoints'
 })
-export class TablesComponent {
+export class EndpointsComponent {
     constructor() {}
 
 }

@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { TablesComponent } from './endpoints.page';
+import { EndpointsComponent } from './endpoints.page';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 const Routes: Routes = [{
     path: '',
-    component: TablesComponent
+    component: EndpointsComponent
 }];
 
 @NgModule({
@@ -14,7 +14,7 @@ const Routes: Routes = [{
         RouterModule.forChild(Routes)
     ],
     declarations: [
-        TablesComponent
+        EndpointsComponent
     ]
 })
-export class TablesModule {}
+export class EndpointsModule {}

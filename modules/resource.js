@@ -18,6 +18,7 @@ function IsResource(urlArr){
 }
 
 function Get(res, dir, urlArr){
+    console.log('resource fetching', urlArr);
     Send(res, path.join(dir, 'resources', urlArr.join('/')) );
 }
 

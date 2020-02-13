@@ -4,10 +4,72 @@
             <div class="col-sm-6">
                 <h1 class="m-0 text-dark">Resources</h1>
             </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item" *ngFor="let route of routeArr" [class.active]="route.active"><a (click)="onRoute(route.path)">{{ route.text }}</a></li>
+                </ol>
+            </div>
         </div>
     </div>
 </section>
 
 <section class="content">
-    
+    <div [class.open]="filesOpen" class="files-panel open">
+        <div class="files list-group">
+            <div class="list-group-item settings">
+                <a class="toggle" (document:keydown.meta.b)="onToggleFiles($event)" (click)="onToggleFiles()"><i [class.fa-rotate-180]="filesOpen" class="fas fa-caret-right"></i></a>
+                <a class="settings" (click)="onSettings()"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="list-group-item" *ngIf="route !== ''" (dblclick)="onBackRoute()">
+                <i class="fas fa-level-up-alt"></i>
+                <span class="list-text">. . .</span>
+            </div>
+            <div class="list-group-item" *ngFor="let file of files" (dblclick)="onOpen(file)">
+                <i class="fas fa-file-code" *ngIf="file.file"></i>
+                <i class="fas fa-folder" *ngIf="file.directory"></i>
+                <span class="list-text">{{ file.name }}</span>
+            </div>
+            <div class="list-group-item" (click)="onUpload()">
+                <i class="fas fa-upload"></i>
+                <span class="list-text">Upload to {{ route.split('/').pop() }}</span>
+            </div>
+        </div>
+        <div class="ace-panel">
+            <ace [config]="config" [(value)]="code[codeTab]"></ace>
+        </div>
+    </div>
+    <div class="editor-panel card">
+
+        <div class="card-header">
+            <ul class="nav nav-tabs" style="border-bottom: 0;">
+                <li class="nav-item" *ngFor="let file of code; let i = index">
+                    <a [class.active]="file.active" class="nav-link" (click)="onActive(i)">
+                        <span class="edited" *ngIf="file.lastEdit !== file.lastSave">•</span>
+                        {{file.name}} 
+                        <a (click)="onClose(i)">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body">
+            <div class="editor" *ngIf="activeIndex >= 0 && code[activeIndex]">
+                <div class="image" *ngIf="code[activeIndex].type == 'image'">
+                    <img [src]="code[activeIndex].name" [alt]="code[activeIndex].name">
+                </div>
+                <div class="video" *ngIf="code[activeIndex].type == 'video'">
+                    <video [src]="code[activeIndex].path"></video>
+                </div>
+                <div class="code" *ngIf="code[activeIndex].config">
+                    <ace [config]="code[activeIndex].config" [(value)]="code[activeIndex].code" (valueChange)="onEdited(activeIndex)"></ace>
+                </div>
+                <div class="error" *ngIf="!code[activeIndex]?.type && !code[activeIndex]?.config">
+                    <p>Un handled file type cannot open {{code[activeIndex].name}}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </section>

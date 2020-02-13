@@ -1,13 +1,33 @@
-function Run(scriptPath){
+function Run(options){
     return new Promise((res)=>{
         try {
+
             // run the module.exports function of a script
-            let data = require(scriptPath)();
-            res(data);
+            const script = require(options.pageScript);
+            // require = () => {
+            //     res({error: `require() function is disabled please use build it modules to access database and files`});
+            // };
+            // pass exposed modules to script
+            let modules = {
+                url: options.urlArr,
+                session: options.req.session,
+                GET: options.GET
+            }
+            let data = script(modules) || null;
+            console.log('script data', data)
+            if(data && data.then && typeof data.then === 'function') {
+                
+                data.then((newData) => {
+                    res(newData);
+                })
+            } else { 
+                res(data);
+            }
+            
         } catch(err) {
             // catch any and all errors to be returned to user
             res({
-                error: err.message
+                error: err.message + ' in page script'
             });
         }
     });

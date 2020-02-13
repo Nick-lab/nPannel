@@ -16,16 +16,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { CreatePageComponent } from './home/pages/create-page/create-page.page';
+import { CreatePartialComponent } from './home/pages/create-partial/create-partial.page';
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = { };
 
 @NgModule({
   declarations: [
     AppComponent,
-    CreatePageComponent
+    CreatePageComponent,
+    CreatePartialComponent
   ],
   entryComponents: [
-    CreatePageComponent
+    CreatePageComponent,
+    CreatePartialComponent
   ],
   imports: [
     BrowserModule,

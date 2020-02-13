@@ -4,24 +4,25 @@ import { DataManagerService } from './data.service';
 
 @Injectable()
 export class AccessGuard implements CanActivate {
-    constructor(private dataMngr: DataManagerService, private router: Router) {
-        // this.dataMngr.loadUser();
-    }
+    constructor(private dataMngr: DataManagerService, private router: Router) { }
 
     canActivate(route: ActivatedRouteSnapshot): Promise<boolean> | boolean {
-        const requiresAdmin = route.data.requiresAdmin || false;
-        if (requiresAdmin) {
-            // Check that the user is logged in...
-            const user: any = this.dataMngr.load('user-data');
-            if (user) {
-                return true;
+        return new Promise((res) => {
+            const requiresAdmin = route.data.requiresAdmin || false;
+            if (requiresAdmin) {
+                // Check that the user is logged in...
+                this.dataMngr.loadUser().then((user) => {
+                    console.log(user);
+                    if (user) {
+                        res(true);
+                    } else {
+                        this.router.navigateByUrl('admin/signin');
+                        res(false);
+                    }
+                });
             } else {
-                console.log('deny');
-                this.router.navigateByUrl('admin/signin');
-                return false;
+                res(true);
             }
-        } else {
-            return true;
-        }
+        })
     }
 }

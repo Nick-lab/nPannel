@@ -32,6 +32,10 @@ const Routes: Routes = [{
             loadChildren: './tables/tables.module#TablesModule'
         },
         {
+            path: 'endpoints',
+            loadChildren: './endpoints/endpoints.module#EndpointsModule'
+        },
+        {
             path: '',
             redirectTo: 'dashboard'
         }

@@ -2,40 +2,51 @@ const fs = require('fs');
 const path = require('path');
 const db = require('./database');
 
+var tmp;
+var url;
+
 function Resolve(client, urlArr){
-    return new Promise((res)=>{
-        //var clientDir = path.join(global.paths.clients, String(client.id));
-        
+    return new Promise(async (res)=>{
         // find page to supply
-        let tmp = {
+        tmp = {
             meta: [],
             styles: [],
             scripts: []
         }
-        let url = '/' + urlArr.join('/');
-        db.getRow(`SELECT dp.*, cd.id as domain_id FROM domain_pages dp JOIN client_domains cd ON (cd.id = dp.domain) WHERE cd.domain = '${client.domain}' AND dp.route = '${url}' `).then((page)=>{
+        url = '/' + urlArr.join('/');
+        var page = await getPage(client);
+        
+        if(page){
+            tmp.styles.push('/css/' + page.id + '.css');
+            let domain_scripts = await db.query(`SELECT file FROM domain_scripts WHERE domain = ${page.domain_id}`);
+            let domain_styles = await db.query(`SELECT file FROM domain_styles WHERE domain = ${page.domain_id}`);
+            let page_scripts = await db.query(`SELECT file FROM page_scripts WHERE page = '${page.id}'`);
+            let page_styles = await db.query(`SELECT file FROM page_styles WHERE page = '${page.id}'`);
             if(page){
-                db.query(`SELECT file FROM domain_scripts WHERE domain = ${page.domain_id}`).then((domain_scripts) => {
-                    db.query(`SELECT file FROM domain_styles WHERE domain = ${page.domain_id}`).then((domain_styles) => {
-                        db.query(`SELECT file FROM page_scripts WHERE page = '${page.id}'`).then((page_scripts) => {
-                            db.query(`SELECT file FROM page_styles WHERE page = '${page.id}'`).then((page_styles) => {
-                                if(page){
-                                    tmp.page = page;
-                                }
-                                if(domain_scripts) domain_scripts.forEach((script)=>{tmp.scripts.push({src: script.file})});
-                                if(domain_styles) domain_styles.forEach((style)=>{tmp.styles.push({src: style.file})});
-                                if(page_scripts) page_scripts.forEach((script)=>{tmp.scripts.push({src: script.file})});
-                                if(page_styles) page_styles.forEach((style)=>{tmp.styles.push({src: style.file})});
-                    
-                                res(tmp);
-                            })
-                        })
-                    })
-                })
-            }else{
-                res(false);
+                tmp.page = page;
             }
-        })
+            if(domain_scripts) domain_scripts.forEach((script)=>{tmp.scripts.push(script.file)});
+            if(domain_styles) domain_styles.forEach((style)=>{tmp.styles.push(style.file)});
+            if(page_scripts) page_scripts.forEach((script)=>{tmp.scripts.push(script.file)});
+            if(page_styles) page_styles.forEach((style)=>{tmp.styles.push(tyle.file)});
+
+            res(tmp);
+        }else{
+            res(false);
+        }
+    })
+}
+
+function getPage(client) {
+    return new Promise(async (res) => {
+        var page = await db.getRow(`SELECT dp.*, cd.id as domain_id FROM domain_pages dp JOIN client_domains cd ON (cd.id = dp.domain) WHERE cd.domain = '${client.domain}' AND dp.route = '${url}' `);
+        if(!page && url == '/') {
+            page = await db.getRow(`SELECT dp.*, cd.id as domain_id FROM domain_pages dp JOIN client_domains cd ON (cd.id = dp.domain) WHERE cd.domain = '${client.domain}' AND dp.type = 'default'`);
+        }
+        if(!page && url !== '/') {
+            page = await db.getRow(`SELECT dp.*, cd.id as domain_id FROM domain_pages dp JOIN client_domains cd ON (cd.id = dp.domain) WHERE cd.domain = '${client.domain}' AND dp.type = '404'`);
+        }
+        res(page);
     })
 }
 

@@ -1,6 +1,29 @@
+:host{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.content {
+    flex: 1;
+}
 .page-head{
     padding-bottom: 15px;
 }
-.ace {
-    position: absolute;
+
+.card {
+    height: calc(100% - 10px);
+
+    .card-body{
+        padding: 5px 15px;
+        display: flex;
+        flex-direction: column;
+        .card{
+            flex: 1;
+        }
+    }
+}
+
+.list-items{
+    display: flex;
+    justify-content: space-between;
 }

@@ -5,6 +5,7 @@ import { Route } from '@angular/compiler/src/core';
 
 export interface PageData {
     parent: string;
+    types: {};
     parentRoute?: string;
     page?: string;
 }
@@ -20,6 +21,10 @@ export class CreatePageComponent {
     title: string;
     route;
     type;
+    createdTypes;
+    pageTypes = [
+        {value: 'standard', label: 'Standard'}
+    ];
 
     constructor(
         private dataMngr: DataManagerService,
@@ -28,6 +33,14 @@ export class CreatePageComponent {
     ) {
         this.parent = this.data.parent;
         this.parentRoute = this.data.parentRoute || false;
+        this.createdTypes = this.data.types || {};
+        this.buildPageTypes();
+    }
+
+    buildPageTypes() {
+        console.log(this.createdTypes);
+        if(!this.parent && !this.createdTypes['404']) this.pageTypes.push({value: '404', label: '404'});
+        if(!this.createdTypes['default'])  this.pageTypes.push({value: 'default', label: 'Default'});
     }
 
     onSave() {
