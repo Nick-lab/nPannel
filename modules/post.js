@@ -24,7 +24,7 @@ function Process(req, res){
 
     client.load(domain).then(async (client)=>{
         if (client) {
-
+            
             if (action == 'signin'){
                 if(POST.email && POST.pass ){
                     db.query(`SELECT * FROM clients c JOIN client_domains cd ON (cd.client = c.id) WHERE cd.domain = '${domain}' AND c.email = '${POST.email}'`).then((result)=>{
@@ -53,6 +53,7 @@ function Process(req, res){
             }
 
             if (action == 'get-pages'){
+
                 let pages = await db.query(`
                     SELECT dp.* 
                     FROM domain_pages dp 

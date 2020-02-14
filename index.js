@@ -23,8 +23,8 @@ global.paths = {
 // base connection for data base
 global.database = {
   host: 'localhost',
-  user: 'root',
-  password: 'Nicholas-lab2489',
+  user: 'mysql',
+  password: 'mysql',
   database: 'npanel'
 }
 

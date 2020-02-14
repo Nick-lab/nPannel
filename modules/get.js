@@ -31,7 +31,6 @@ function Process(req, res, app){
 
     // http or https
     var protocol = req.protocol;
-    console.log('request', req.originalUrl, req.hostname);
     // load clinet details
     client.load(domain).then((client)=>{
         // if client parse client and url to supply files
