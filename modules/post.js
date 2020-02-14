@@ -142,6 +142,7 @@ function Process(req, res){
                 console.log(POST);
                     let filesPath = path.join(global.paths.clients, client.id.toString(), 'resources', POST.path);
                     fs.readdir(filesPath, (err, files) => {
+                        console.log(files);
                         let tmp = {
                             route: POST.path,
                             files: []
@@ -149,18 +150,23 @@ function Process(req, res){
                         if(err) {
                             res.status(500).send(error);
                         } else {
-                            files.forEach((fileName, i) => {
-                                let filePath = path.join(filesPath, fileName);
-                                let file = {
-                                    path: filePath,
-                                    name: fileName
-                                };
-                                if (fs.statSync(filePath).isDirectory()) file.directory = true;
-                                if (fs.statSync(filePath).isFile()) file.file = true;
-
-                                tmp.files.push(file);
-                                if(i == files.length - 1) res.send(tmp);
-                            })
+                            if(files.length){
+                                files.forEach((fileName, i) => {
+                                    let filePath = path.join(filesPath, fileName);
+                                    let file = {
+                                        path: filePath,
+                                        name: fileName
+                                    };
+                                    if (fs.statSync(filePath).isDirectory()) file.directory = true;
+                                    if (fs.statSync(filePath).isFile()) file.file = true;
+    
+                                    tmp.files.push(file);
+                                    if(i == files.length - 1) res.send(tmp);
+                                })
+                            } else {
+                                res.send(tmp);
+                            }
+                            
                         }
                     })
             }
