@@ -111,10 +111,20 @@ function Process(req, res){
                         })
                     }
                     if(Do == 'edit-page'){
-        
+                        
                     }
                     if(Do == 'delete-page'){
-                        console.log('DELETE', POST);
+                        deleteFile(path.join(global.paths.clients, client.id.toString(), 'views', POST.file.id + '.hbs')).then(async (result) => {
+                            
+                            let page = await db.query(`DELETE FROM domain_pages WHERE id = '${POST.file.id}'`);
+                            let meta = await db.query(`DELETE FROM page_meta WHERE page = '${POST.file.id}'`);
+                            let script = await db.query(`DELETE FROM page_scripts WHERE page = '${POST.file.id}'`);
+                            let style = await db.query(`DELETE FROM page_styles WHERE page = '${POST.file.id}'`);
+                            let tmp = { ok: true };
+                            if(result.error) tmp.error = result.error;
+                            console.log({POST, page, meta, script, style});
+                            res.send(tmp);
+                        })
                     }
                 }
             }
@@ -122,13 +132,14 @@ function Process(req, res){
             if (action == 'delete-partial') {
                 if(POST.file) {
                     deleteFile(path.join(global.paths.clients, client.id.toString(), 'views/partials', POST.file) + '.hbs').then((result) => {
-                        if(result) res.send({ok: true});
-                        else res.send({error: true});
+                        if(result.ok) res.send({ok: true});
+                        else res.send({error: result.error}); 
                     })
                 }
             }
 
             if (action == 'resouces-load') {
+                console.log(POST);
                     let filesPath = path.join(global.paths.clients, client.id.toString(), 'resources', POST.path);
                     fs.readdir(filesPath, (err, files) => {
                         let tmp = {
@@ -177,10 +188,9 @@ function deleteFile(path) {
     return new Promise((res) => {
         fs.unlink(path, (err) => {
             if(err) {
-                console.log(err);
-                res(false);
+                res({error: err});
             } else {
-                res(true);
+                res({ok: true});
             }
         })
     });

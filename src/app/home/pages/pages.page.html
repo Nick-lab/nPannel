@@ -33,7 +33,7 @@
                     <ul *ngIf="pages" class="list-group">
                         <li *ngFor="let page of pages" class="list-group-item list-items">
                             <a [routerLink]="'/admin/pages/' + page.id">{{ page.title }}</a>
-                            <a (click)="deletePartial(partial)" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></a>
+                            <a (click)="deletePage(page)" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></a>
                         </li>
                     </ul>
                 </div>

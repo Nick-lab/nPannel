@@ -259,6 +259,32 @@ export class PagesComponent {
         });
     }
 
+    deletePage(file) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result:any) => {
+            console.log(result);
+            if(result.value) {
+                this.dataMngr.post('page', {do: 'delete-page', file: file}).then((data:any) => {
+                    if(data.ok) {
+                        Swal.fire(
+                            'Deleted!',
+                            `Partial ${file.title} has been deleted.`,
+                            'success'
+                        );
+                        this.onGetPages();
+                    }
+                })
+            }
+        })
+    }
+
     deletePartial(file) {
         Swal.fire({
             title: 'Are you sure?',
@@ -268,18 +294,20 @@ export class PagesComponent {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
-          }).then((result) => {
-            this.dataMngr.post('delete-partial', {file: file}).then((data:any) => {
-                if(data.ok) {
-                    Swal.fire(
-                        'Deleted!',
-                        `Partial ${file} has been deleted.`,
-                        'success'
-                    );
-                    this.onGetPages();
-                }
-            })
-          })
+        }).then((result:any) => {
+            if(result.value){
+                this.dataMngr.post('delete-partial', {file: file}).then((data:any) => {
+                    if(data.ok) {
+                        Swal.fire(
+                            'Deleted!',
+                            `Partial ${file} has been deleted.`,
+                            'success'
+                        );
+                        this.onGetPages();
+                    }
+                });
+            }
+        });
     }
 
 }
