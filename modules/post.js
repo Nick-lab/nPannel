@@ -114,7 +114,7 @@ function Process(req, res){
         
                     }
                     if(Do == 'delete-page'){
-                        
+                        console.log('DELETE', POST);
                     }
                 }
             }
