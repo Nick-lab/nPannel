@@ -32,7 +32,6 @@ function Send(res, resourcePath, options = false){
     fs.access(resourcePath, fs.F_OK, (err)=>{
         if(err){
             // resolve the request with a 404
-            console.log('Not Found', resourcePath);
             res.status(404).send('Not found');
         }else{
             // stream file to user

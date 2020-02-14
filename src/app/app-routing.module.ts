@@ -21,6 +21,10 @@ const routes: Routes = [
 {
   path: 'admin/signout',
   loadChildren: './signout/signout.module#SignoutModule'
+},
+{
+  path: '**',
+  redirectTo: 'admin'
 }
 ];
 

@@ -45,7 +45,6 @@ function Process(req, res){
             }
         
             if (action == 'check-signin') {
-                console.log('CHECK', req.session.user)
                 if(req.session.user) {
                     res.send(req.session.user);
                 } else {
@@ -78,7 +77,6 @@ function Process(req, res){
                     files.forEach(file => {
                         partials.push(file.split('.').shift());
                     })
-                    console.log(partials)
                 }
                 let sortedTypes = {};
                 types.forEach((type) => {
@@ -101,7 +99,6 @@ function Process(req, res){
                     if(Do == 'create-page'){
                         db.getRow(`SELECT id FROM client_domains WHERE domain = '${domain}'`).then((result)=>{
                             if(result) {
-                                console.log(result);
                                 POST.domain = result.id;
                                 POST.id = Math.random().toString(36).substr(2, 9);
                                 db.insert('domain_pages', POST).then((result)=>{

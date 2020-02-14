@@ -28,11 +28,10 @@ function Process(req, res, app){
             GET[splitKey[0]] = !isNaN(splitKey[1]) ? Number(splitKey[1]) : decodeURI(splitKey[1]);
         });
     }
-    console.log(urlArr);
 
     // http or https
     var protocol = req.protocol;
-    
+    console.log('request', req.originalUrl, req.hostname);
     // load clinet details
     client.load(domain).then((client)=>{
         // if client parse client and url to supply files
@@ -43,19 +42,16 @@ function Process(req, res, app){
 
 
         if(client){
-            //console.log(client);
             // clients folder directory use global from here out
             var clientDir = global.paths.clientDir = path.join(global.paths.clients, String(client.id));
 
             // check if url is trying to load a resource file or a page
             if(resource.isResource(urlArr) && !urlArr[0].match(/^[_]+[a-z]+/gm)){
-                // console.log(urlArr);
                 // pass resolve / clients directory and url Array and sends back file requested or a 404 if it doesn't exsist
                 if(urlArr[0] === "admin"){
                     if(urlArr[1] === "admin"){
                         urlArr.shift();
                     }
-                    console.log(path.join('ionic_directory', 'www', urlArr.slice(1).join('/')));
                     let options = false;
                     let lastUrl = urlArr[urlArr.length - 1];
                     let fileExt = lastUrl.split('.');
@@ -108,7 +104,6 @@ function Process(req, res, app){
                                 req,
                                 urlArr
                             }).then((data)=>{
-                                console.log(data);
                                 if(data && data.error){
                                     // must send errors to client if they appear otherwise they cannot debug code
                                     res.status(500).send(data.error);

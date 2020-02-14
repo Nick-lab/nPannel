@@ -53,7 +53,6 @@ function Connect(){
             try {
                 con.connect((err)=>{
                     if(err) {
-                        console.log(err);
                         res(err);
                     } else {
                         connected = true;
@@ -61,7 +60,6 @@ function Connect(){
                     }
                 })
             } catch (e) {
-                console.log(e);
             }
         }
     })

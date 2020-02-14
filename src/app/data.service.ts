@@ -1,36 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class DataManagerService {
-    public ep = 'localhost';
     public prod = environment.production;
     public uploadedPercentage;
-    private devPoints = {
-        ep: 'localhost:3000/'
-    }
-
-    private prodPoints = {
-        ep: 'https://punchcardllc.com/_endpoints/punchcard_001/'
-    }
-
     public user;
 
     constructor(
-        private http: HttpClient,
-        private router: Router
+        private http: HttpClient
     ) {
-        if (this.prod) {
-            Object.keys(this.prodPoints).forEach((key) => {
-                this[key] = this.prodPoints[key];
-            });
-        } else {
-            Object.keys(this.devPoints).forEach((key) => {
-                this[key] = this.devPoints[key];
-            });
-        }
+        
     }
 
     private localSave(key: string, data: any) {

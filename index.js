@@ -23,8 +23,8 @@ global.paths = {
 // base connection for data base
 global.database = {
   host: 'localhost',
-  user: 'mysql',
-  password: 'mysql',
+  user: 'root',
+  password: 'Nicholas-lab2489',
   database: 'npanel'
 }
 
@@ -34,6 +34,7 @@ global.devDomains = [
   'localhost',
   'vitushost',
   'vitushosting',
+  'npanel.io'
 ];
 
 // root modules
@@ -49,13 +50,12 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   cookie: { 
-    expires: 20000,
+    expires: 300000,
     secure: false,
     sameSite: false
   }
 }));
 app.use((req, res, next) => {
-  console.log('req.session', req.session)
   next()
 })
 app.use(frameguard())
@@ -88,5 +88,4 @@ http.listen(port, ()=>{
 //   cert: cert
 // }, app)
 // .listen(port, function () {
-//   console.log('Listening on port: '+port);
 // })

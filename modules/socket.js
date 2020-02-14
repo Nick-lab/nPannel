@@ -11,7 +11,6 @@ function Process(socket, io) {
             let nsp = io.of(domain);
             let socket_path = path.join(clientDir, 'endpoints/socket.js');
             fs.access(socket_path, error => {
-                console.log('socket file');
                 socket.on('join-room', (room) => {
                     if(room.match(new RegExp(`^${domain}?[\/]?[a-z0-1]*`))){
                         socket.join(room);

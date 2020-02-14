@@ -14,7 +14,6 @@ function Run(options){
                 GET: options.GET
             }
             let data = script(modules) || null;
-            console.log('script data', data)
             if(data && data.then && typeof data.then === 'function') {
                 
                 data.then((newData) => {
