@@ -23,6 +23,20 @@ process.argv.slice(2).forEach((arg)=> {
 
 const port = args.deploy ? 80 : 3000; 
 
+var localDB = {
+  host: 'localhost',
+  user: 'mysql',
+  password: 'mysql',
+  database: 'npanel'
+}
+
+var deployDB = {
+  host: 'localhost',
+  user: 'admin',
+  password: 'Nicholas-lab2489',
+  database: 'npanel'
+}
+
 // setup global object
 global.paths = {
   root: __dirname,
@@ -33,19 +47,7 @@ global.paths = {
 // base connection for data base
 global.database = args.deploy ? deployDB : localDB;
 
-let localDB = {
-  host: 'localhost',
-  user: 'mysql',
-  password: 'mysql',
-  database: 'npanel'
-}
 
-let deployDB = {
-  host: 'localhost',
-  user: 'admin',
-  password: 'Nicholas-lab2489',
-  database: 'npanel'
-}
 
 // domain to determin dev environment
 global.devDomains = [
