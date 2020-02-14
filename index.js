@@ -11,7 +11,17 @@ const https = require('https');
 
 const io = require('socket.io').listen(http);
 
-const port = 3000; 
+var args = {};
+process.argv.slice(2).forEach((arg)=> {
+  let split = arg.split('=');
+  if(split.length > 1){
+    args[split[0]] = split[1];
+  } else {
+    args[arg] = true;
+  }
+})
+
+const port = args.deploy ? 80 : 3000; 
 
 // setup global object
 global.paths = {
@@ -21,10 +31,19 @@ global.paths = {
 }
 
 // base connection for data base
-global.database = {
+global.database = args.deploy ? deployDB : localDB;
+
+let localDB = {
   host: 'localhost',
   user: 'mysql',
   password: 'mysql',
+  database: 'npanel'
+}
+
+let deployDB = {
+  host: 'localhost',
+  user: 'admin',
+  password: 'Nicholas-lab2489',
   database: 'npanel'
 }
 
@@ -40,7 +59,6 @@ global.devDomains = [
 // root modules
 const get = require(path.join(global.paths.modules, 'get'));
 const post = require(path.join(global.paths.modules, 'post'));
-const client = require(path.join(global.paths.modules, 'client'));
 const socket_module = require(path.join(global.paths.modules, 'socket'));
 
 // setup session managment
@@ -55,9 +73,7 @@ app.use(session({
     sameSite: false
   }
 }));
-app.use((req, res, next) => {
-  next()
-})
+
 app.use(frameguard())
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
