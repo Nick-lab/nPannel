@@ -17,6 +17,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { CreatePageComponent } from './home/pages/create-page/create-page.page';
 import { CreatePartialComponent } from './home/pages/create-partial/create-partial.page';
+import { UploadComponent } from './home/resources/upload/upload.page';
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = { };
 
@@ -24,11 +25,13 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = { };
   declarations: [
     AppComponent,
     CreatePageComponent,
-    CreatePartialComponent
+    CreatePartialComponent,
+    UploadComponent
   ],
   entryComponents: [
     CreatePageComponent,
-    CreatePartialComponent
+    CreatePartialComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule,

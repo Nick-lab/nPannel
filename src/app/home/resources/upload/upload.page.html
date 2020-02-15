@@ -1,0 +1,28 @@
+<div class="content">
+    <div class="modal-header">
+        <h4 class="modal-title">Upload Files</h4>
+        <button aria-label="Close" class="close" type="button" (click)="onClose()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    
+    <div class="modal-body">
+        <label class="upload-container" for="files">
+            <span *ngIf="files.length == 0" class="overlay">
+                Drag and drop
+                <br>
+                Or Click to Upload
+            </span>
+            <span class="file" *ngFor="let file of files; let i = index;">
+                {{ file.name }}
+                
+            </span>
+            <input id="files" type="file" (change)="onFiles($event)" multiple>
+        </label>
+    </div>
+    
+    <div class="modal-footer">
+            <button _ngcontent-jwm-c4="" class="btn btn-outline-success" type="button" (click)="onSave()">Upload</button>
+    </div>
+</div>
+    

@@ -27,7 +27,7 @@ function Process(req, res){
             
             if (action == 'signin'){
                 if(POST.email && POST.pass ){
-                    db.query(`SELECT * FROM clients c JOIN client_domains cd ON (cd.client = c.id) WHERE cd.domain = '${domain}' AND c.email = '${POST.email}'`).then((result)=>{
+                    db.query(`SELECT * FROM clients c JOIN client_domains cd ON (cd.client = c.id) WHERE cd.domain = '${domain}' AND c.email = '${POST.email.toLowerCase()}'`).then((result)=>{
                         if(result && !result.error){
                             let user = result[0];
                             if(POST.pass === user.password){
@@ -139,36 +139,49 @@ function Process(req, res){
             }
 
             if (action == 'resouces-load') {
-                console.log(POST);
-                    let filesPath = path.join(global.paths.clients, client.id.toString(), 'resources', POST.path);
-                    fs.readdir(filesPath, (err, files) => {
-                        console.log(files);
-                        let tmp = {
-                            route: POST.path,
-                            files: []
-                        }
-                        if(err) {
-                            res.status(500).send(error);
+                let filesPath = path.join(global.paths.clients, client.id.toString(), 'resources', POST.path);
+                fs.readdir(filesPath, (err, files) => {
+                    let tmp = {
+                        route: POST.path,
+                        files: []
+                    }
+                    if(err) {
+                        res.status(500).send(error);
+                    } else {
+                        if(files.length){
+                            files.forEach((fileName, i) => {
+                                let filePath = path.join(filesPath, fileName);
+                                let file = {
+                                    path: filePath,
+                                    name: fileName
+                                };
+                                if (fs.statSync(filePath).isDirectory()) file.directory = true;
+                                if (fs.statSync(filePath).isFile()) file.file = true;
+
+                                tmp.files.push(file);
+                                if(i == files.length - 1) res.send(tmp);
+                            })
                         } else {
-                            if(files.length){
-                                files.forEach((fileName, i) => {
-                                    let filePath = path.join(filesPath, fileName);
-                                    let file = {
-                                        path: filePath,
-                                        name: fileName
-                                    };
-                                    if (fs.statSync(filePath).isDirectory()) file.directory = true;
-                                    if (fs.statSync(filePath).isFile()) file.file = true;
-    
-                                    tmp.files.push(file);
-                                    if(i == files.length - 1) res.send(tmp);
-                                })
-                            } else {
-                                res.send(tmp);
-                            }
-                            
+                            res.send(tmp);
                         }
-                    })
+                        
+                    }
+                })
+            }
+
+            if (action == 'upload-file') {
+                 
+                var form = new formidable.IncomingForm();
+                form.parse(req, function(err, fields, files) {
+                    let dest = path.join(global.paths.clients, String(client.id), 'resources',fields.dest);
+                    Object.keys(files).forEach((key, i) => {
+                        let file = files[key];
+                        let stream = fs.createWriteStream(path.join(dest, file.name));
+                        fs.createReadStream(file.path).pipe(stream);
+                        
+                    });
+                    res.send({ok: true});
+                });
             }
 
             if (action == 'save-code') {

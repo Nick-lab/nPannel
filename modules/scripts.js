@@ -1,7 +1,7 @@
 function Run(options){
     return new Promise((res)=>{
         try {
-
+            console.log(options);
             // run the module.exports function of a script
             const script = require(options.pageScript);
             // require = () => {

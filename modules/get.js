@@ -47,10 +47,12 @@ function Process(req, res, app){
             // check if url is trying to load a resource file or a page
             if(resource.isResource(urlArr) && !urlArr[0].match(/^[_]+[a-z]+/gm)){
                 // pass resolve / clients directory and url Array and sends back file requested or a 404 if it doesn't exsist
+                console.log('is resource', urlArr);
                 if(urlArr[0] === "admin"){
                     if(urlArr[1] === "admin"){
                         urlArr.shift();
                     }
+                    console.log('after shift ', urlArr)
                     let options = false;
                     let lastUrl = urlArr[urlArr.length - 1];
                     let fileExt = lastUrl.split('.');
@@ -58,9 +60,12 @@ function Process(req, res, app){
                     if(Object.keys(mime).indexOf(fileExt.join('.')) > -1){
                         options = {type: mime[fileExt.join('.')]};
                     }
-                    resource.send(res, path.join(global.paths.root, 'www', urlArr.slice(1).join('/')), options);
+                    if(urlArr[1] == '_resource') {
+                        resource.send(res, path.join(global.paths.clients, client.id.toString(), 'resources', urlArr.slice(2).join('/')), options);
+                    } else {
+                        resource.send(res, path.join(global.paths.root, 'www', urlArr.slice(1).join('/')), options);
+                    }
                 }else{
-                    
                     resource.get(res, clientDir, urlArr);
                 }
             }else{ 

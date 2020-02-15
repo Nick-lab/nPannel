@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { DataManagerService } from 'src/app/data.service';
+import { UploadComponent } from './upload/upload.page';
 import { AceComponent, AceDirective, AceConfigInterface } from 'ngx-ace-wrapper';
+import { MatDialog } from '@angular/material/dialog';
 import { Md5 } from 'ts-md5';
 
 import 'brace';
@@ -23,7 +25,7 @@ export class ResourcesComponent {
     mode: string = '';
     filesOpen: boolean = true;
 
-    constructor(private dataMngr: DataManagerService) {
+    constructor(private dataMngr: DataManagerService, private modal: MatDialog) {
         this.onRoute(this.route);
     }
 
@@ -84,10 +86,27 @@ export class ResourcesComponent {
         }
     }
 
+    onUpload() {
+        const modal = this.modal.open(UploadComponent, {
+            width: '350',
+            
+        });
+        modal.afterClosed().subscribe((files: Array<File>) => {
+            let formData = new FormData();
+            for(let i = 0; i < files.length; i++) {
+                let file = files[i];
+                formData.append('files_'+i, file);
+            }
+            formData.append('dest', this.route);
+            this.dataMngr.filePost('upload-file', formData).then((result:any) => {
+                if(result.ok) this.onRoute(this.route);
+            })
+        });
+    }
+
     onOpen(file: file) {
         if(file.file) {
             let path = file.path.split('resources').pop();
-            console.log('open: ', path);
             const handler = '/_clientfile/resources';
             const codeTypes = {
                 css: 'css',
@@ -97,7 +116,7 @@ export class ResourcesComponent {
             const imageTypes = ['jpg', 'jpeg', 'png', 'ico'];
 
             let fileExt = file.name.split('.').pop();
-            
+            console.log(fileExt);
             this.code.forEach((code) => {
                 code.active = false;
             })
@@ -162,6 +181,10 @@ export class ResourcesComponent {
             let path = this.route + '/' + file.name;
             this.onRoute(path);
         }
+    }
+
+    onSave() {
+
     }
 
     onEdited(i) {

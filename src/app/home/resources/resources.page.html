@@ -61,10 +61,10 @@
         <div class="card-body">
             <div class="editor" *ngIf="activeIndex >= 0 && code[activeIndex]">
                 <div class="image" *ngIf="code[activeIndex].type == 'image'">
-                    <img [src]="code[activeIndex].name" [alt]="code[activeIndex].name">
+                    <img [src]="'_resource/' + code[activeIndex].name" [alt]="code[activeIndex].name">
                 </div>
                 <div class="video" *ngIf="code[activeIndex].type == 'video'">
-                    <video [src]="code[activeIndex].path"></video>
+                    <video [src]="'_resource/' + code[activeIndex].name" controls></video>
                 </div>
                 <div class="code" *ngIf="code[activeIndex].config">
                     <ace [config]="code[activeIndex].config" [(value)]="code[activeIndex].code" (valueChange)="onEdited(activeIndex)"></ace>
