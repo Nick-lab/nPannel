@@ -72,12 +72,52 @@ function Process(req, res){
                 `);
                 let types = await db.query(`SELECT type, count(*) as count FROM ${global.database.database}.domain_pages group by type`);
                 let partials;
+                let layouts;
+                let assets = {
+                    scripts: [],
+                    styles: [],
+                    meta: []
+                };
                 if(!parent) {
                     partials = [];
-                    let files = fs.readdirSync(path.join(global.paths.clients, client.id.toString(), 'views/partials'));
-                    files.forEach(file => {
+                    layouts = [];
+                    let partialFiles = fs.readdirSync(path.join(global.paths.clients, client.id.toString(), 'views/partials'));
+                    partialFiles.forEach(file => {
                         partials.push(file.split('.').shift());
-                    })
+                    });
+                    let layoutFiles = fs.readdirSync(path.join(global.paths.clients, client.id.toString(), 'views/layouts'));
+                    layoutFiles.forEach(file => {
+                        layouts.push(file.split('.').shift());
+                    });
+
+                    // get domain_meta, domain_scripts, domain_styles
+                    assets.scripts = await db.select({
+                        table: 'domain_scripts',
+                        where: `domain = ${client.id}`
+                    });
+                    assets.styles = await db.select({
+                        table: 'domain_styles',
+                        where: `domain = ${client.id}`
+                    });
+                    assets.meta = await db.select({
+                        table: 'domain_meta',
+                        where: `domain = ${client.id}`
+                    });
+                } else {
+                    // get page_meta, page_scripts, page_styles
+                    console.log(parent);
+                    assets.scripts = await db.select({
+                        table: 'page_scripts',
+                        where: `page = '${parent.id}'`
+                    });
+                    assets.styles = await db.select({
+                        table: 'page_styles',
+                        where: `page = '${parent.id}'`
+                    });
+                    assets.meta = await db.select({
+                        table: 'page_meta',
+                        where: `page = '${parent.id}'`
+                    });
                 }
                 let sortedTypes = {};
                 types.forEach((type) => {
@@ -87,11 +127,61 @@ function Process(req, res){
                     parent,
                     pages,
                     types: sortedTypes,
-                    partials
+                    partials,
+                    layouts,
+                    assets
                 }
                 res.send(tmp);
             }
-        
+
+            if (action == 'page-settings') {
+                if (POST.do){
+                    var Do = POST.do;
+                    delete POST.do;
+                    
+                    if(Do == 'save-file') {
+                        let table = (POST.page ? 'page' : 'domain') + '_' + POST.type;
+                        let tmp = {
+
+                        }
+                        if(POST.page) {
+                            tmp.page = POST.page;
+                        } else {
+                            tmp.domain = client.id;
+                        }
+
+                        switch(POST.type) {
+                            case 'scripts':
+                                tmp.file = POST.content;
+                                break;
+                            case 'styles':
+                                tmp.file = POST.content;
+                                break;
+                            case 'meta':
+                                tmp.type = POST.content.meta_type;
+                                tmp.content = POST.content.meta_content
+                        }
+                        console.log(tmp, table);
+                        db.insert(table, tmp).then((result) => {
+                            if(result) res.send(result);
+                            else res.send({ok: true});
+                        })
+                    }
+
+                    if(Do == 'update-file') {
+                        
+                    }
+
+                    if(Do == 'delete-file') {
+                        let table = (POST.page ? 'page' : 'domain') + '_' + POST.type;
+                        db.query(`DELETE FROM ${table} WHERE id = ${POST.id}`).then((result) => {
+                            if(result.error) res.send(result);
+                            else res.send({ok: true});
+                        })
+                    }
+                }
+            }
+
             if (action == 'page') {
                 if (POST.do){
                     var Do = POST.do;
@@ -113,6 +203,7 @@ function Process(req, res){
                     if(Do == 'edit-page'){
                         
                     }
+
                     if(Do == 'delete-page'){
                         deleteFile(path.join(global.paths.clients, client.id.toString(), 'views', POST.file.id + '.hbs')).then(async (result) => {
                             
@@ -132,6 +223,15 @@ function Process(req, res){
             if (action == 'delete-partial') {
                 if(POST.file) {
                     deleteFile(path.join(global.paths.clients, client.id.toString(), 'views/partials', POST.file) + '.hbs').then((result) => {
+                        if(result.ok) res.send({ok: true});
+                        else res.send({error: result.error}); 
+                    })
+                }
+            }
+
+            if (action == 'delete-layout') {
+                if(POST.file) {
+                    deleteFile(path.join(global.paths.clients, client.id.toString(), 'views/layouts', POST.file) + '.hbs').then((result) => {
                         if(result.ok) res.send({ok: true});
                         else res.send({error: result.error}); 
                     })

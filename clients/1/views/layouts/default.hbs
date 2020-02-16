@@ -11,7 +11,7 @@
         {{!-- Page Resources --}}
         <script src="/socket.io/socket.io.js"></script>
         {{#each scripts}}
-            <script src="{{ this }}" <!-- {{#if defer}}async defer{{/if}} --> ></script>
+            <script src="{{ this }}"></script>
         {{/each}}
         {{!-- Meta --}}
         <title>{{ page.title }}</title>

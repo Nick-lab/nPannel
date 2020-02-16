@@ -27,3 +27,17 @@
     display: flex;
     justify-content: space-between;
 }
+
+.settings{
+    .file-link {
+        display: flex;
+        margin-bottom: 5px;
+        height: 40px;
+        align-items: center;
+        justify-content: space-between;
+        
+        input  {
+            flex: 1;
+        }
+    }
+}

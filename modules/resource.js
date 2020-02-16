@@ -5,6 +5,7 @@ const resources = [
     "png", 
     "jpeg",
     "jpg",
+    "gif",
     "ico",
     "css",
     "map",
