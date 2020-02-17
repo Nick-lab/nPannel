@@ -28,10 +28,24 @@ function Resolve(client, urlArr){
             if(page){
                 tmp.page = page;
             }
+            
+            if(domain_meta) {
+                domain_meta.forEach((meta) => {
+                    let overide = false;
+                    if(page_meta) {
+                        page_meta.forEach((pmeta) => {
+                            if(pmeta.type == meta) {
+                                overide = true;
+                            }
+                        })
+                    }
+                })
+            }
+
             if(domain_scripts) domain_scripts.forEach((script)=>{tmp.scripts.push(script.file)});
             if(domain_styles) domain_styles.forEach((style)=>{tmp.styles.push(style.file)});
             if(page_scripts) page_scripts.forEach((script)=>{tmp.scripts.push(script.file)});
-            if(page_styles) page_styles.forEach((style)=>{tmp.styles.push(tyle.file)});
+            if(page_styles) page_styles.forEach((style)=>{tmp.styles.push(style.file)});
 
             res(tmp);
         }else{

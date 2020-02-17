@@ -7,6 +7,7 @@ const resources = [
     "jpg",
     "gif",
     "ico",
+    "svg",
     "css",
     "map",
     "ttf",

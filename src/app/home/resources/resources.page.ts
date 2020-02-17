@@ -267,7 +267,7 @@ interface image {
     active: boolean;
     name: string;
     type: 'image';
-    fileType: 'jpeg' | 'ico' | 'png';
+    fileType: 'jpeg' | 'ico' | 'png' | 'svg' | 'gif';
     path: string;
 }
 
