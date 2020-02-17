@@ -113,7 +113,7 @@ export class ResourcesComponent {
                 js: 'javascript'
             }
             const videoTypes = ['mp4', 'webm', 'avi'];
-            const imageTypes = ['jpg', 'jpeg', 'png', 'ico', 'gif'];
+            const imageTypes = ['jpg', 'jpeg', 'png', 'ico', 'gif', 'svg'];
 
             let fileExt = file.name.split('.').pop();
             console.log(fileExt);
