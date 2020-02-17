@@ -113,7 +113,7 @@ export class ResourcesComponent {
                 js: 'javascript'
             }
             const videoTypes = ['mp4', 'webm', 'avi'];
-            const imageTypes = ['jpg', 'jpeg', 'png', 'ico'];
+            const imageTypes = ['jpg', 'jpeg', 'png', 'ico', 'gif'];
 
             let fileExt = file.name.split('.').pop();
             console.log(fileExt);
@@ -181,6 +181,10 @@ export class ResourcesComponent {
             let path = this.route + '/' + file.name;
             this.onRoute(path);
         }
+    }
+
+    onRightClick(event: Event, file: file) {
+        console.log(event, file);
     }
 
     onSave() {

@@ -20,8 +20,11 @@ function Resolve(client, urlArr){
             tmp.styles.push('/css/' + page.id + '.css');
             let domain_scripts = await db.query(`SELECT file FROM domain_scripts WHERE domain = ${page.domain_id}`);
             let domain_styles = await db.query(`SELECT file FROM domain_styles WHERE domain = ${page.domain_id}`);
+            let domain_meta = await db.query(`SELECT * FROM domain_meta WJERE domain = ${page.domain_id}`);
             let page_scripts = await db.query(`SELECT file FROM page_scripts WHERE page = '${page.id}'`);
             let page_styles = await db.query(`SELECT file FROM page_styles WHERE page = '${page.id}'`);
+            let page_meta = await db.query(`SELECT * FROM page_meta WHERE page = '${page.id}'`);
+
             if(page){
                 tmp.page = page;
             }

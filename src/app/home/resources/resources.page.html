@@ -24,7 +24,7 @@
                 <i class="fas fa-level-up-alt"></i>
                 <span class="list-text">. . .</span>
             </div>
-            <div class="list-group-item" *ngFor="let file of files" (dblclick)="onOpen(file)">
+            <div class="list-group-item" *ngFor="let file of files" (dblclick)="onOpen(file)" (contextmenu)="onRightClick($event, file)">
                 <i class="fas fa-file-code" *ngIf="file.file"></i>
                 <i class="fas fa-folder" *ngIf="file.directory"></i>
                 <span class="list-text">{{ file.name }}</span>
