@@ -1,4 +1,4 @@
-module.exports = (req) => {
+module.exports = function(req) {
     this.set = (key, value) => {
         req.session[key] = value;
     }

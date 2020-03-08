@@ -70,7 +70,7 @@ function Process(req, res){
                     WHERE cd.domain = '${domain}'
                     AND dp.id = '${POST.parent}'
                 `);
-                let types = await db.query(`SELECT type, count(*) as count FROM ${global.database.database}.domain_pages group by type`);
+                let types = await db.query(`SELECT type, count(*) as count FROM ${global.database.database}.domain_pages WHERE domain = '${domain}' group by type`);
                 let partials;
                 let layouts;
                 let assets = {

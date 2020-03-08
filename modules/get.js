@@ -6,6 +6,12 @@ const path = require('path');
 var hbs = require( 'express-handlebars');
 var db = require('./database');
 
+// user_modules
+const database = require('../exposed_modules/database');
+const userRouter = require('../exposed_modules/router');
+const session = require('../exposed_modules/session');
+
+
 const mime = {
     'js': 'application/javascript',
     'js.map': 'application/octet-stream'
@@ -101,8 +107,14 @@ function Process(req, res, app){
                             
                             // scripts loads and runs server scripts for user exposed_modules will be modules specifically designed to allow user to interact with server safely
                             // also want to setup a user script to run regardless of what page is loaded like a site wide script
-                            scripts.run({
-                                pageScript, 
+
+                            let modules = {
+                                client,
+                                database: new database(db),
+                                router: new userRouter(client, router),
+                                session: new session(req)
+                            }
+                            scripts.run(pageScript, {
                                 client, 
                                 GET,
                                 req,
@@ -133,6 +145,7 @@ function Process(req, res, app){
             
         }else{
             // no client setup
+            res.redirect(`http://npanel.io/noclient?url=${domain + '/' + urlArr.join('/')}`);
         }
     })
 }
