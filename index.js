@@ -19,8 +19,7 @@ process.argv.slice(2).forEach((arg)=> {
   } else {
     args[arg] = true;
   }
-})
-console.log(args);
+});
 
 const port = args.deploy ? 80 : 3000; 
 

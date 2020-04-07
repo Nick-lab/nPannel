@@ -28,19 +28,6 @@ function Resolve(client, urlArr){
             if(page){
                 tmp.page = page;
             }
-            
-            // if(domain_meta) {
-            //     domain_meta.forEach((meta) => {
-            //         let overide = false;
-            //         if(page_meta) {
-            //             page_meta.forEach((pmeta) => {
-            //                 if(pmeta.type == meta) {
-            //                     overide = true;
-            //                 }
-            //             })
-            //         }
-            //     })
-            // }
 
             if(domain_scripts) domain_scripts.forEach((script)=>{tmp.scripts.push(script.file)});
             if(domain_styles) domain_styles.forEach((style)=>{tmp.styles.push(style.file)});
