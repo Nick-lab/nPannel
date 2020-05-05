@@ -53,12 +53,12 @@ function Process(req, res, app){
             // check if url is trying to load a resource file or a page
             if(resource.isResource(urlArr) && !urlArr[0].match(/^[_]+[a-z]+/gm)){
                 // pass resolve / clients directory and url Array and sends back file requested or a 404 if it doesn't exsist
-                console.log('is resource', urlArr);
+                
                 if(urlArr[0] === "admin"){
                     if(urlArr[1] === "admin"){
                         urlArr.shift();
                     }
-                    console.log('after shift ', urlArr)
+                    
                     let options = false;
                     let lastUrl = urlArr[urlArr.length - 1];
                     let fileExt = lastUrl.split('.');
@@ -101,7 +101,7 @@ function Process(req, res, app){
                         
                         if(route) {
                             // route object to hold all data that comes from user scripts and should be rendered with template
-                            console.log(req.connection.remoteAddress, req.sessionID);
+                            
                             // get path to user script
                             let pageScript = path.join(clientDir, 'page_scripts', route.page.id + '.js');
                             

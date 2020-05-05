@@ -21,7 +21,7 @@ process.argv.slice(2).forEach((arg)=> {
   }
 });
 
-const port = args.deploy ? 80 : 3000; 
+const port = process.env.deploy ? 80 : 3000; 
 
 var localDB = {host: 'localhost',user: 'mysql',password: 'mysql',database: 'npanel'};
 var deployDB = {host: 'localhost',user: 'admin',password: 'Nicholas-lab2489',database: 'npanel'};
@@ -37,8 +37,8 @@ global.paths = {
 }
 
 // base connection for data base
-global.database = args.deploy ? deployDB : localDB;
-global.stripe = args.deploy ? deployStripe : localStripe
+global.database = process.env.deploy ? deployDB : localDB;
+global.stripe = process.env.deploy ? deployStripe : localStripe
 
 
 // domain to determin dev environment

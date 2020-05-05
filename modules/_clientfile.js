@@ -15,7 +15,7 @@ function Send(res, filePath) {
         if(err){
             if(tries > 2){
                 // resolve the request with a 404
-                console.log('Not Found', filePath);
+                console.error('Not Found', filePath);
                 res.status(404).send('Not found');
             }else{
                 fs.writeFile(filePath, "", (err) => {
