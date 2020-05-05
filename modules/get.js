@@ -14,6 +14,7 @@ const session = require('../exposed_modules/session');
 
 const mime = {
     'js': 'application/javascript',
+    'min.js': 'application/javascript',
     'js.map': 'application/octet-stream'
 }
 
