@@ -20,7 +20,7 @@ process.argv.slice(2).forEach((arg)=> {
     args[arg] = true;
   }
 });
-
+console.log(process.env);
 const port = process.env.deploy ? 80 : 3000; 
 
 var localDB = {host: 'localhost',user: 'mysql',password: 'mysql',database: 'npanel'};
@@ -47,7 +47,7 @@ global.devDomains = [
   'localhost',
   'npanel.io'
 ];
-
+console.log(global.devDomains);
 // root modules
 const get = require(path.join(global.paths.modules, 'get'));
 const post = require(path.join(global.paths.modules, 'post'));
