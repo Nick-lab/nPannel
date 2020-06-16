@@ -14,6 +14,9 @@ const Routes: Routes = [{
         {
             path: 'pages',
             loadChildren: './pages/pages.module#PagesModule'
+        },{
+            path: 'pages/*',
+            loadChildren: './pages/pages.module#PagesModule'
         },
         {
             path: 'pages/:id',
