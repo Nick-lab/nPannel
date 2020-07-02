@@ -23,6 +23,7 @@ function Process(req, res, app){
 
     // split the request domain
     var domain = req.get('host').split(':')[0];
+    //if( global.devDomains.indexOf(domain) > -1) domain = 'npanel.io';
 
     // split url into array eg: domain.com/account/settings -> ["account", "settings"] 
     var urlArr = req.originalUrl.split('?')[0].replace(/^\/+|\/+$/g, '').split('/');
@@ -39,10 +40,17 @@ function Process(req, res, app){
     // http or https
     var protocol = req.protocol;
     // load clinet details
+
+    console.log({
+        urlArr,
+        GET,
+        domain
+    })
     client.load(domain).then((client)=>{
         // if client parse client and url to supply files
         // catch client / db errors
         if(client.error) {
+            console.log(client);
             res.send(client.error)
         }
 

@@ -21,7 +21,11 @@ function Process(req, res){
     }
     var POST = req._body ? req.body : false;
     const action = urlArr[0];
-
+    console.log({
+        urlArr,
+        GET,
+        domain
+    })
     client.load(domain).then(async (client)=>{
         if (client) {
             
@@ -298,6 +302,11 @@ function Process(req, res){
                     res.send({ok: true});
                 });
             }
+        } else {
+            res.send({
+                error: 'no client found',
+                client
+            });
         }
     });
 }

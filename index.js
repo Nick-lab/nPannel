@@ -23,7 +23,7 @@ process.argv.slice(2).forEach((arg)=> {
 console.log(process.env);
 const port = process.env.deploy ? 80 : 3000; 
 
-var localDB = {host: 'localhost',user: 'mysql',password: 'mysql',database: 'npanel'};
+var localDB = {host: 'npanel.io',user: 'npanel',password: 'Ajry63!6',database: 'npanel'};
 var deployDB = {host: 'localhost',user: 'admin',password: 'Nicholas-lab2489',database: 'npanel'};
 
 var localStripe = { pk: 'pk_test_5UoU7ivH3mLi06hB1t0S7H6p', sk: 'sk_test_xJHSv4QtYtHvZnMpLIUIsfiV'};
@@ -34,6 +34,14 @@ global.paths = {
   root: __dirname,
   modules: path.join(__dirname, 'modules'),
   clients: path.join(__dirname, 'clients')
+}
+
+// set to false to silent error or 
+global.debug = {
+  database: true,
+  get: true,
+  post: true,
+  client: true
 }
 
 // base connection for data base
@@ -62,7 +70,7 @@ app.use(session({
   cookie: { 
     expires: 300000,
     secure: false,
-    sameSite: false
+    sameSite: true
   }
 }));
 

@@ -19,7 +19,7 @@ import 'brace/theme/github';
 export class ResourcesComponent {
     files: file[] = [];
     route = "";
-    routeArr = [];
+    routeArr: route[] = [];
     activeIndex: number = null;
     code: (code | image | video | fileErr)[] = [];
     mode: string = '';
@@ -30,6 +30,7 @@ export class ResourcesComponent {
     }
 
     onRoute(path) {
+        console.log(path)
         this.dataMngr.post('resouces-load', {path}).then((data: routeData) => {
             this.route = data.route;
             this.files = data.files.sort((a: file, b: file) => {
@@ -55,7 +56,7 @@ export class ResourcesComponent {
     onCalcRouteArr() {
         let arr = this.route.split('/');
         console.log(arr);
-        let routes: route[] = [ ];
+        let routes: route[] = [];
         if(arr.length > 0) {
             arr.forEach((route, i) => {
                 if(route === ''){
@@ -73,7 +74,7 @@ export class ResourcesComponent {
                 } else {
                     routes.push({
                         text: route,
-                        path: routes[i].path + '/' + route,
+                        path: routes[i-1].path + '/' + route,
                         active: false
                     });
                 }
@@ -120,7 +121,9 @@ export class ResourcesComponent {
             this.code.forEach((code) => {
                 code.active = false;
             })
+            console.log('FILE PATH', handler + path, file.path);
             if(Object.keys(codeTypes).indexOf(fileExt) >= 0) {
+                
                 this.dataMngr.get(handler + path).then((fileData: Blob) => {
                     const reader = new FileReader();
                     reader.addEventListener('loadend', (e) => {
@@ -164,7 +167,7 @@ export class ResourcesComponent {
                     name: file.name,
                     type: 'image',
                     fileType: fileExt,
-                    path: file.path
+                    path: file.path.split('resources/').pop()
                 } as image);
                 this.activeIndex = this.code.length -1;
             }
