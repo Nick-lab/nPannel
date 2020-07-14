@@ -24,7 +24,7 @@ process.argv.slice(2).forEach((arg)=> {
 
 
 var localDB = {host: 'npanel.io',user: 'npanel',password: 'Ajry63!6',database: 'npanel'};
-var deployDB = {host: 'localhost',user: 'admin',password: 'Nicholas-lab2489',database: 'npanel'};
+var deployDB = {host: 'localhost',user: 'npanel',password: 'Ajry63!6',database: 'npanel'};
 
 var localStripe = { pk: 'pk_test_5UoU7ivH3mLi06hB1t0S7H6p', sk: 'sk_test_xJHSv4QtYtHvZnMpLIUIsfiV'};
 var deployStripe = { pk: 'pk_live_eypsSphPuMsG7RVjOAxvnehr', sk: 'sk_live_6q7MZJ1RqbnXZVjyJ3VKewgQ'};
