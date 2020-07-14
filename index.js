@@ -11,8 +11,9 @@ const https = require('https');
 
 const io = require('socket.io').listen(http);
 
-var args = {};
+var args = false;
 process.argv.slice(2).forEach((arg)=> {
+  args = {};
   let split = arg.split('=');
   if(split.length > 1){
     args[split[0]] = split[1];
@@ -20,8 +21,7 @@ process.argv.slice(2).forEach((arg)=> {
     args[arg] = true;
   }
 });
-console.log(process.env);
-const port = process.env.deploy ? 80 : 3000; 
+
 
 var localDB = {host: 'npanel.io',user: 'npanel',password: 'Ajry63!6',database: 'npanel'};
 var deployDB = {host: 'localhost',user: 'admin',password: 'Nicholas-lab2489',database: 'npanel'};
@@ -45,8 +45,14 @@ global.debug = {
 }
 
 // base connection for data base
-global.database = process.env.deploy ? deployDB : localDB;
-global.stripe = process.env.deploy ? deployStripe : localStripe
+global.deploy = args.deploy ? true : process.env.deploy ? true : false;
+console.log(global.deploy);
+
+const port = global.deploy ? 80 : 3002; 
+global.database = global.deploy ? deployDB : localDB;
+global.stripe = global.deploy ? deployStripe : localStripe;
+
+
 
 
 // domain to determin dev environment
