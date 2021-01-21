@@ -38,7 +38,7 @@
     "ngx-ace-wrapper": "^8.0.0",
     "nodemon": "^2.0.2",
     "rxjs": "~6.4.0",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "stripe": "^8.22.0",
     "sweetalert2": "^8.19.0",
     "systeminformation": "^4.21.2",
